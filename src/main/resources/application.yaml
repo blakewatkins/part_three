@@ -1,0 +1,41 @@
+spring:
+  profiles:
+    active: dev
+  application:
+    name: part_three_trial
+  cloud:
+    function:
+      definition: eventConsumer
+    stream:
+      instanceCount: ${MDMS_INPUT_INSTANCE_COUNT:1}
+      instanceIndex: ${MDMS_INPUT_INSTANCE_INDEX:0}
+      bindings:
+        eventConsumer-in-0:
+          group: ${spring.application.name}-${spring.profiles.active}
+      kafka:
+        bindings:
+          eventConsumer-in-0:
+            consumer:
+              configuration:
+                max.poll.records: 1
+      binders:
+        kafka1:
+          type: kafka
+          environment:
+            spring:
+              cloud:
+                stream:
+                  kafka:
+                    binder:
+                      brokers: ${MDMS_BOOTSTRAP_SERVERS:localhost:9092}
+                      configuration:
+                        key.deserializer: org.apache.kafka.common.serialization.StringDeserializer
+                        value.deserializer: org.apache.kafka.common.serialization.ByteArrayDeserializer
+                        security.protocol: SASL_SSL
+                        sasl.mechanism: PLAIN
+                        sasl.jaas.config: org.apache.kafka.common.security.plain.PlainLoginModule required username='${confluent.cloud.api}' password='${confluent.cloud.secret}';
+                        ssl.endpoint.identification.algorithm: https
+                      replicationFactor: 3
+confluent.cloud:
+  api: ${MDMS_CONFLUENT_CLOUD_API:default-api-will-not-work}
+  secret: ${MDMS_CONFLUENT_CLOUD_SECRET:default-secret-will-not-work}

@@ -1,0 +1,11 @@
+spring:
+  profiles: dev
+  cloud:
+    stream:
+      bindings:
+        eventConsumer-in-0:
+          destination: mdms.dev.test.test
+          binder: kafka1
+logging:
+  level:
+    com.amway.dms.mdmseventkeystoglobalprocessor: TRACE

@@ -4,7 +4,7 @@ spring:
     stream:
       bindings:
         eventConsumer-in-0:
-          destination: mdms.dev.test.test
+          destination: mdms.dev.test.test,mdms.dev.test.test1
           binder: kafka1
 logging:
   level:
